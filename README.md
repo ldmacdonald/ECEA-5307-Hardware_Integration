@@ -11,6 +11,13 @@ Select 'Yes' to enable then reboot
 
 Documentation: https://rplcd.readthedocs.io/en/stable/getting_started.html
 
+## Runner Requirements
+
+```
+sudo apt-get install python3.10-venv
+sudo apt install build-essential python3-dev
+```
+
 
 ## Python Pip Setup
 ```
