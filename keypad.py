@@ -31,6 +31,8 @@ keypad = adafruit_matrixkeypad.Matrix_Keypad(rows, cols, keys)
 # I2C
 lcd.write_string("Starting")
 
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(25, GPIO.OUT)
 
 while True:
     keys = keypad.pressed_keys
@@ -39,4 +41,9 @@ while True:
         message = "Pressed: {}\n".format(str(keys))
         lcd.clear()
         lcd.write_string(message)
+        # Structure for driving 'motor'
+        # GPIO.output(25, GPIO.HIGH)
+        # time.sleep(1)
+        # GPIO.output(25, GPIO.LOW)
     time.sleep(0.1)
+#GPIO.cleanup()
