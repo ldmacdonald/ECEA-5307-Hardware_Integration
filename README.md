@@ -20,3 +20,22 @@ python -m pip install RPi.GPIO
 python -m pip install RPLCD
 
 ```
+
+## GPIO Usage
+
+![Pi Zero W GPIO diagram](./Pi_Zero_W_GPIO.png)
+
+| Pin in Use | Type | Description |
+|  ---------------- |  ---------------- |  ---------------- |
+| 26 | GPIO | Keypad Column 1 |
+| 20 | GPIO | Keypad Column 2 |
+| 21 | GPIO | Keypad Column 3 |
+|  5 | GPIO | Keypad Row 1 |
+|  6 | GPIO | Keypad Row 2 |
+| 13 | GPIO | Keypad Row 3 |
+| 19 | GPIO | Keypad Row 4 |
+|  6 | GND | LCD Ground |
+|  4 | PWR | LCD Power |
+|  2 | SDA | LCD SDA I2C |
+|  3 | SCL | LCD SCL I2C |
+
