@@ -28,7 +28,7 @@ jobs:
       # Setup python venv 
       - name: Run a multi-line script and install
         run: |
-          python -m venv .keypad
+          python3 -m venv .keypad
           source .keypad/bin/activate
           python3 -m pip install --upgrade pip 
           python3 -m pip install -r requirements.txt
