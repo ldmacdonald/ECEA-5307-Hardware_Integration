@@ -12,15 +12,19 @@ import requests
 import RPi.GPIO as GPIO
 
 def check_product(product):
-    response = requests.get('')
-
+    
     try:
+        request_body = "http://192.168.254.181:5000/identity/{}".format(str(product))
+        response = requests.get(request_body)
         data = response.json()
         print(data)
+        return True
     except requests.exceptions.JSONDecodeError:
         print("Response is not in JSON format")
-
-    return True
+    except requests.exceptions.RequestException:
+        print("Likely connection issue")
+    
+    return False
 
 # LCD Setup
 from RPLCD.i2c import CharLCD
@@ -45,38 +49,46 @@ keypad = adafruit_matrixkeypad.Matrix_Keypad(rows, cols, keys)
 # I2C
 lcd.write_string("Welcome")
 
-GPIO.setmode(GPIO.BOARD)
+#GPIO.setmode(GPIO.BOARD)
 GPIO.setup(25, GPIO.OUT)
+
+product = ""
 
 while True:
     keys = keypad.pressed_keys
     if keys:
         if len(keys) == 1:
-            print("Pressed: ", keys[0])
-            if len(product) > 2:
-                product = product + keys[0]
+            print("Pressed: ", str(keys[0]))
+            if len(product) < 2:
+                product = product + str(keys[0])
             else:
-                product = keys[0]
-        message = "Keys Pressed: \n    {}".format(str(product))
+                product = str(keys[0])
+        message = "Keys Pressed: {}".format(str(product))
         lcd.clear()
         lcd.write_string(message)
-        time.sleep(0.1)
+        time.sleep(1.0)
         lcd.clear()
-        lcd.write("Checking: \n    {}".format(product))
-        if check_product(product):
-            lcd.clear()
-            lcd.write('Dispensing')
-            # Structure for driving 'motor'
-            GPIO.output(25, GPIO.HIGH)
-            time.sleep(1)
-            GPIO.output(25, GPIO.LOW)
-            lcd.clear()
-            lcd.write_string("Welcome")
-        else:
-            lcd.clear()
-            lcd.write_string("Unable to Dispense")
-            time.sleep(0.1)
-            lcd.clear()
-            lcd.write_string("Welcome")
+        print(len(product))
+        
+        if len(product) > 1:
+            print("checking")
+            check_message = "Checking: {}".format(str(product))
+            lcd.write_string(check_message)
+            if check_product(product):
+                lcd.clear()
+                lcd.write_string('Dispensing')
+                # Structure for driving 'motor'
+                GPIO.output(25, GPIO.HIGH)
+                time.sleep(1.0)
+                GPIO.output(25, GPIO.LOW)
+                lcd.clear()
+                lcd.write_string("Welcome")
+            else:
+                lcd.clear()
+                fail_message = "Unable to Dispense: {}".format(str(product))
+                lcd.write_string(fail_message)
+                time.sleep(0.5)
+                lcd.clear()
+                lcd.write_string("Welcome")
     time.sleep(0.1)
 GPIO.cleanup()
